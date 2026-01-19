@@ -37,5 +37,25 @@ namespace MaidenServer.Controllers
             }
         }
 
+        // Endpoint to handle incoming SMS messages
+        [HttpPost("OpenRouter")]
+        public async Task<IActionResult> IncomingRequestOR([FromForm] string Body, [FromForm] string Character = "0")
+        {
+            _logger.LogInformation("Incoming request received with Body: {Body}", Body);
+
+            try
+            {
+                var response = await _AIService.GetORChatResponseAsync(Body, Character);
+                _logger.LogInformation("AI response: {Response}", response);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while generating response");
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
