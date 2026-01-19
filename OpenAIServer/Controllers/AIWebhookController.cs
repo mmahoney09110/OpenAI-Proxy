@@ -86,6 +86,7 @@ namespace MaidenServer.Controllers
 
         // Test endpoint callable from browser
         [HttpGet("test")]
+        [HttpHead("test")]
         public async Task<IActionResult> keepAlive()
         {
             try
