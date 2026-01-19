@@ -83,5 +83,19 @@ namespace MaidenServer.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
+        // Test endpoint callable from browser
+        [HttpGet("test")]
+        public async Task<IActionResult> keepAlive()
+        {
+            try
+            {
+                return Ok("Server is alive");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
     }
 }
