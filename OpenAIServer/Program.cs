@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1) Register your services
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<AiServiceVectorStore>();
 
 // Add IP Rate Limiting
@@ -45,4 +46,3 @@ app.UseIpRateLimiting();
 //app.MapRazorPages().WithStaticAssets();
 
 app.Run();
-

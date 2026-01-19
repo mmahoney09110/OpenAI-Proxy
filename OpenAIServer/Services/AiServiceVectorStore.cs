@@ -1,4 +1,5 @@
-﻿using OpenAI.Assistants;
+﻿using Microsoft.Extensions.Logging;
+using OpenAI.Assistants;
 using OpenAI.Files;
 using OpenAI.VectorStores;
 using System.ClientModel;
@@ -15,10 +16,10 @@ namespace OpenAI.Examples
     {
         private readonly string _apiKey;
         private readonly string _ORKey;
-        Logger<AiServiceVectorStore> _logger;
+        ILogger<AiServiceVectorStore> _logger;
         IHttpClientFactory _httpClientFactory;
 
-        public AiServiceVectorStore(IConfiguration configuration, Logger<AiServiceVectorStore> logger, IHttpClientFactory httpClientFactory, string oRKey)
+        public AiServiceVectorStore(ILogger<AiServiceVectorStore> logger, IHttpClientFactory httpClientFactory)
         {
             _apiKey = Environment.GetEnvironmentVariable("OpenAI_API_KEY") ?? string.Empty;
             _ORKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY") ?? string.Empty;
@@ -386,4 +387,3 @@ namespace OpenAI.Examples
         };
     }
 }
-
