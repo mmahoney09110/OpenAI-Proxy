@@ -20,8 +20,8 @@ namespace OpenAI.Examples
 
         public AiServiceVectorStore(IConfiguration configuration, Logger<AiServiceVectorStore> logger, IHttpClientFactory httpClientFactory, string oRKey)
         {
-            _apiKey = configuration["OpenAI:APIKey"] ?? string.Empty;
-            _ORKey = configuration["OpenRouter:APIKey"] ?? string.Empty;
+            _apiKey = Environment.GetEnvironmentVariable("OpenAI_API_KEY") ?? string.Empty;
+            _ORKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY") ?? string.Empty;
             Console.WriteLine($"[DEBUG] API Key Loaded: {(_ORKey.Length > 0 ? "Yes" : "No")}");
             Console.WriteLine($"[DEBUG] API Key Loaded: {(_apiKey.Length > 0 ? "Yes" : "No")}");
             _logger = logger;
