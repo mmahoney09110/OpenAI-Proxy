@@ -1,5 +1,6 @@
-using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.HttpOverrides;
 using OpenAI.Examples;
+using TextMate.Middlewares;
 
 var _configuration = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
@@ -14,35 +15,26 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<AiServiceVectorStore>();
 
-// Add IP Rate Limiting
-builder.Services.AddInMemoryRateLimiting();
-builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-
-// Add the rate limit middleware
-builder.Services.AddOptions();
+// Add memory cache for rate limiting
 builder.Services.AddMemoryCache();
-
-// Add Rate Limiting policies
-builder.Services.Configure<IpRateLimitOptions>(_configuration.GetSection("IpRateLimiting"));
 
 var app = builder.Build();
 
-// 2) (Optional) redirect to HTTPS
 app.UseHttpsRedirection();
 
-// 3) Routing must come before MapControllers
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+// Rate Limiting implemented with IpRateLimitingMiddleware for:
+// - Global: 100 requests/minute per IP
+// - Authentication pages (/Identity): 5 requests/minute per IP
+// - SMS webhooks (/sms): 10 requests/minute per IP
+// (Static assets are not rate limited)
+app.UseIpRateLimiting();
+
 app.UseRouting();
 
-// 4) auth goes here
-//app.UseAuthorization();
-
-// 5) Map API controllers
 app.MapControllers();
-
-// 6) (Optional) static pages, razor, etc.
-// Enable IP rate limiting
-app.UseIpRateLimiting();
-//app.MapStaticAssets();
-//app.MapRazorPages().WithStaticAssets();
 
 app.Run();

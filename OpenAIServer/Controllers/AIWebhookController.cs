@@ -2,7 +2,7 @@
 using OpenAI.Examples;
 using System.Threading.Tasks;
 
-namespace MaidenServer.Controllers
+namespace OpenAIServer.Controllers
 {
     [ApiController]
     [Route("api")]
