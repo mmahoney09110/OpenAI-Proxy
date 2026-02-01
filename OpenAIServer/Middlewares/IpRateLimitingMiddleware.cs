@@ -32,7 +32,7 @@ namespace TextMate.Middlewares
             requests.Enqueue(now);
 
             // Determine limit based on path
-            int limit = 200;
+            int limit = 10;
 
             // Remove timestamps outside the rolling 1-minute window
             while (requests.TryPeek(out var oldest) && oldest <= windowStart)
